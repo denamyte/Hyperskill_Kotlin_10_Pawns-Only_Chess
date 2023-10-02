@@ -9,3 +9,5 @@ content:
   - Integers in action
   - Relational operators
   - Enum
+  - If expression
+  - Processing strings

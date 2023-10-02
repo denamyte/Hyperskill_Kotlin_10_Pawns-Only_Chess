@@ -11,6 +11,10 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/Pawns-Only Chess/task" />
+            <option value="$PROJECT_DIR$/Pawns-Only Chess/task/build/classes/kotlin" />
+            <option value="$PROJECT_DIR$/Pawns-Only Chess/task/build/reports/tests" />
+            <option value="$PROJECT_DIR$/Pawns-Only Chess/task/build/test-results" />
+            <option value="$PROJECT_DIR$/Pawns-Only Chess/task/build/tmp" />
             <option value="$PROJECT_DIR$/Topics/Comments/Comment some lines" />
             <option value="$PROJECT_DIR$/Topics/Comments/Comment syntax" />
             <option value="$PROJECT_DIR$/Topics/Comments/Find the correct comment" />
@@ -39,6 +43,13 @@
             <option value="$PROJECT_DIR$/Topics/Enum/Methods and parameters of Enum" />
             <option value="$PROJECT_DIR$/Topics/Enum/Properties of Enum" />
             <option value="$PROJECT_DIR$/Topics/Enum/Theory" />
+            <option value="$PROJECT_DIR$/Topics/If expression/Check a number is positive" />
+            <option value="$PROJECT_DIR$/Topics/If expression/Healthy sleep" />
+            <option value="$PROJECT_DIR$/Topics/If expression/Interval" />
+            <option value="$PROJECT_DIR$/Topics/If expression/Positive, Negative or Zero" />
+            <option value="$PROJECT_DIR$/Topics/If expression/Queens" />
+            <option value="$PROJECT_DIR$/Topics/If expression/Theory" />
+            <option value="$PROJECT_DIR$/Topics/If expression/Triangle" />
             <option value="$PROJECT_DIR$/Topics/Integers in action/Desks" />
             <option value="$PROJECT_DIR$/Topics/Integers in action/Divide nuts equally between squirrels" />
             <option value="$PROJECT_DIR$/Topics/Integers in action/How many nuts will be left after division" />
@@ -51,6 +62,14 @@
             <option value="$PROJECT_DIR$/Topics/Integers in action/Time difference" />
             <option value="$PROJECT_DIR$/Topics/Integers in action/Time format" />
             <option value="$PROJECT_DIR$/Topics/Integers in action/Underscore" />
+            <option value="$PROJECT_DIR$/Topics/Processing strings/Create a euphonious word" />
+            <option value="$PROJECT_DIR$/Topics/Processing strings/Determine the value" />
+            <option value="$PROJECT_DIR$/Topics/Processing strings/Double characters" />
+            <option value="$PROJECT_DIR$/Topics/Processing strings/Lucky number" />
+            <option value="$PROJECT_DIR$/Topics/Processing strings/Number of occurrences" />
+            <option value="$PROJECT_DIR$/Topics/Processing strings/Piece of alphabet" />
+            <option value="$PROJECT_DIR$/Topics/Processing strings/The longest word" />
+            <option value="$PROJECT_DIR$/Topics/Processing strings/Theory" />
             <option value="$PROJECT_DIR$/Topics/Relational operators/Are the numbers different" />
             <option value="$PROJECT_DIR$/Topics/Relational operators/Boys in the sport class" />
             <option value="$PROJECT_DIR$/Topics/Relational operators/Check the value" />
