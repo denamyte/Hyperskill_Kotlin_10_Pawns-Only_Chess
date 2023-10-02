@@ -69,6 +69,12 @@ files:
     
     
     learner_created: false
+  - name: src/chess/Board.kt
+    visible: true
+    learner_created: true
 feedback_link: https://hyperskill.org/learn/step/13174#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Mon, 02 Oct 2023 20:44:03 UTC"
 record: -1

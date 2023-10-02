@@ -1,5 +1,6 @@
 package chess
 
 fun main() {
-//    write your code here
+    println(" Pawns-Only Chess")
+    println(Board())
 }
