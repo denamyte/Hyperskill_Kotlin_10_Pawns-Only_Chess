@@ -1,0 +1,1 @@
+fun main() = println(List(3) { readln().toInt() }.sumOf { (it + 1) / 2 })

@@ -1,0 +1,5 @@
+fun main() = readln().toInt()
+    .div(2)
+    .times(2)
+    .plus(2)
+    .let(::println)

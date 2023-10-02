@@ -1,0 +1,20 @@
+type: choice
+is_multiple_choice: true
+options:
+  - text: Single line comment - comment at the end of a line
+  - text: The standard multiline comments
+  - text: The documentation comments (doc comments)
+files:
+  - name: src/Main.kt
+    visible: true
+    text: |
+      // You can experiment here, it won’t be checked
+      
+      fun main(args: Array<String>) {
+        // put your code here
+      }
+    learner_created: false
+feedback_link: https://hyperskill.org/learn/step/4414#comment
+status: Solved
+record: -1
+local_check: false

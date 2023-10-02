@@ -1,0 +1,1 @@
+fun main() = print(readln().toInt() in 1 until  10)

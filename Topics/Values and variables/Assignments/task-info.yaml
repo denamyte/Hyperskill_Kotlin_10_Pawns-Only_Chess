@@ -1,0 +1,18 @@
+type: code
+files:
+  - name: src/Main.kt
+    visible: true
+    highlight_level: NONE
+    text: |-
+      fun main() {
+          val one
+          val two
+          val three
+          val four = 400
+          println("$one $two $three $four")
+      }
+    learner_created: false
+feedback_link: https://hyperskill.org/learn/step/4384#comment
+status: Solved
+record: -1
+submission_language: kotlin
