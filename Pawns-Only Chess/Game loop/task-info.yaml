@@ -215,6 +215,55 @@ files:
     
     
     learner_created: false
+  - name: src/chess/Board.kt
+    visible: true
+    text: |-
+      package chess
+      
+      private const val SIZE = 8
+      private const val SEP_LINE = "  +---+---+---+---+---+---+---+---+\n"
+      private const val LETTERS = "abcdefgh"
+      private const val LETTER_LINE = "    a   b   c   d   e   f   g   h"
+      private val DATA_LINE = "%s | ".repeat(9).trim() + "\n"
+      private val rankRange = 8 downTo 1
+      
+      private fun getRank(c: Char) = MutableList(SIZE) { c }
+      
+      class Board {
+          private val data = MutableList(SIZE) { getRank(' ') }
+      
+          init {
+              data[1] = getRank('B')
+              data[6] = getRank('W')
+          }
+      
+          override fun toString() = buildString {
+              append(SEP_LINE)
+              append(
+                  rankRange.joinToString(SEP_LINE) {
+                      DATA_LINE.format(it, *data[convertRankIndex(it)].toTypedArray())
+                  }
+              )
+              append(SEP_LINE)
+              append(LETTER_LINE)
+          }
+      
+          private fun convertRankIndex(index: Int) = SIZE - index
+          private fun convertFilesIndex(letter: Char) = LETTERS.indexOf(letter)
+      }
+    learner_created: true
+  - name: src/chess/Player.kt
+    visible: true
+    learner_created: true
+  - name: src/chess/ChessColor.kt
+    visible: true
+    learner_created: true
+  - name: src/chess/Game.kt
+    visible: true
+    learner_created: true
 feedback_link: https://hyperskill.org/learn/step/13175#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Tue, 03 Oct 2023 21:10:01 UTC"
 record: -1
