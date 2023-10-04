@@ -470,6 +470,114 @@ files:
     
     
     learner_created: false
+  - name: src/chess/Board.kt
+    visible: true
+    text: |-
+      package chess
+      
+      private const val SIZE = 8
+      private const val SEP_LINE = "  +---+---+---+---+---+---+---+---+\n"
+      private const val LETTERS = "abcdefgh"
+      private const val LETTER_LINE = "    a   b   c   d   e   f   g   h"
+      private val DATA_LINE = "%s | ".repeat(9).trim() + "\n"
+      private val rankRange = 8 downTo 1
+      
+      private fun getRank(c: Char) = MutableList(SIZE) { c }
+      
+      class Board {
+          private val data = MutableList(SIZE) { getRank(' ') }
+      
+          init {
+              data[1] = getRank('B')
+              data[6] = getRank('W')
+          }
+      
+          override fun toString() = buildString {
+              append(SEP_LINE)
+              append(
+                  rankRange.joinToString(SEP_LINE) {
+                      DATA_LINE.format(it, *data[convertRankIndex(it)].toTypedArray())
+                  }
+              )
+              append(SEP_LINE)
+              append(LETTER_LINE)
+          }
+      
+          private fun convertRankIndex(index: Int) = SIZE - index
+          private fun convertFilesIndex(letter: Char) = LETTERS.indexOf(letter)
+      }
+    learner_created: true
+  - name: src/chess/ChessColor.kt
+    visible: true
+    text: |-
+      package chess
+      
+      enum class ChessColor(val sym: Char) {
+          Black('B'),
+          White('W'),
+      }
+    learner_created: true
+  - name: src/chess/Game.kt
+    visible: true
+    text: |-
+      package chess
+      
+      private val askNamesMap = mapOf(
+          "First" to ChessColor.White,
+          "Second" to ChessColor.Black
+      )
+      private val MOVE_REGEX = Regex("([a-h][1-8]){2}")
+      
+      class Game {
+          private val players: List<Player>
+          private val board = Board()
+      
+          init {
+              players = getPlayers()
+          }
+      
+          fun run() {
+              println(board)
+              println()
+              var pIndex = -1
+              var move = ""
+              while (move != "exit") {
+                  pIndex = (pIndex + 1) % players.size
+                  val p = players[pIndex]
+                  val movePrompt = "${p.name}'s turn:"
+                  while (true) {
+                      println(movePrompt)
+                      move = readln()
+                      if (move == "exit" || isMoveValid(move)) break
+                      println("Invalid Input")
+                  }
+              }
+              println("Bye!")
+          }
+      
+          private fun getPlayers(): List<Player> {
+              return askNamesMap.map { (num, color) ->
+                  println("$num Player's name:")
+                  Player(readln(), color)
+              }
+          }
+      
+          private fun isMoveValid(move: String) = MOVE_REGEX.matches(move)
+      }
+    learner_created: true
+  - name: src/chess/Player.kt
+    visible: true
+    text: |-
+      package chess
+      
+      class Player(val name: String, val color: ChessColor)
+    learner_created: true
+  - name: src/chess/Move.kt
+    visible: true
+    learner_created: true
 feedback_link: https://hyperskill.org/learn/step/13176#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Wed, 04 Oct 2023 20:53:26 UTC"
 record: -1

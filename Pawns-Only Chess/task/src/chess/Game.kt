@@ -7,38 +7,48 @@ private val askNamesMap = mapOf(
 private val MOVE_REGEX = Regex("([a-h][1-8]){2}")
 
 class Game {
-    private val players: List<Player>
+    private lateinit var pMap: Map<ChessColor, Player>
     private val board = Board()
 
-    init {
-        players = getPlayers()
-    }
-
     fun run() {
-        println(board)
-        println()
-        var pIndex = -1
-        var move = ""
-        while (move != "exit") {
-            pIndex = (pIndex + 1) % players.size
-            val p = players[pIndex]
+        pMap = askNamesMap.map { (num, color) ->
+            println("$num Player's name:")
+            Pair(color, Player(readln(), color))
+        }.toMap()
+        var color = ChessColor.Black
+        var sMove = ""
+        while (sMove != "exit") {
+            println(board)
+
+            color = if (color == ChessColor.Black) ChessColor.White else ChessColor.Black
+            val p = pMap[color]!!
             val movePrompt = "${p.name}'s turn:"
             while (true) {
                 println(movePrompt)
-                move = readln()
-                if (move == "exit" || isMoveValid(move)) break
-                println("Invalid Input")
+                sMove = readln()
+                if (sMove == "exit") break
+                if (!isMoveFormatValid(sMove)) {
+                    println("Invalid Input")
+                    continue
+                }
+                val move = Move(sMove)
+                if (!board.isPawnOfColorAt(color, move)) {
+                    println("No ${color.value} pawn at ${sMove.substring(0, 2)}")
+                    continue
+                }
+                if (!board.isMoveValid(color, move)) {
+                    println("Invalid Input")
+                    continue
+                }
+
+                // Everything is valid, make the move
+                board.makeMove(color, move)
+                break
             }
         }
         println("Bye!")
     }
 
-    private fun getPlayers(): List<Player> {
-        return askNamesMap.map { (num, color) ->
-            println("$num Player's name:")
-            Player(readln(), color)
-        }
-    }
+    private fun isMoveFormatValid(move: String) = MOVE_REGEX.matches(move)
 
-    private fun isMoveValid(move: String) = MOVE_REGEX.matches(move)
 }
