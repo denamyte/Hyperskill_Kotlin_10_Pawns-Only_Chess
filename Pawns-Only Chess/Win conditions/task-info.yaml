@@ -595,6 +595,189 @@ files:
     
     
     learner_created: false
+  - name: src/chess/Board.kt
+    visible: true
+    text: |-
+      package chess
+      
+      import kotlin.math.abs
+      
+      private const val SIZE = 8
+      private const val SEP_LINE = "  +---+---+---+---+---+---+---+---+\n"
+      private const val LETTER_LINE = "    a   b   c   d   e   f   g   h\n"
+      private val DATA_LINE = "%s | ".repeat(9).trim() + "\n"
+      private val rankRange = 8 downTo 1
+      
+      private fun createRank(c: Char) = MutableList(SIZE) { c }
+      
+      class Board {
+          private val field: MutableList<MutableList<Char>> = MutableList(SIZE) { createRank(' ') }
+          private val fieldByColor = mapOf(
+              ChessColor.White to field,
+              ChessColor.Black to field.reversed()
+          )
+          private var lastMove: Move = Move(0, 0, 0, 0)
+      
+          init {
+              field[1] = createRank('W')
+              field[6] = createRank('B')
+          }
+      
+          override fun toString() = buildString {
+              append(SEP_LINE)
+              append(
+                  rankRange.joinToString(SEP_LINE) {
+                      DATA_LINE.format(it, *field[it - 1].toTypedArray())
+                  }
+              )
+              append(SEP_LINE)
+              append(LETTER_LINE)
+          }
+      
+          fun isPawnOfColorAt(color: ChessColor, move: Move) = field[move.y1][move.x1] == color.sym
+      
+          fun makeMove(color: ChessColor, move: Move): Boolean {
+              val m = if (color == ChessColor.White) move else move.flip()
+      
+              // Check if this move is taking an opposite pawn
+              if (m.x1 != m.x2) {
+                  if (abs(m.x2 - m.x1) != 1 || m.y2 - m.y1 != 1) return false
+                  if (field[move.y2][move.x2] == color.oppColor().sym) {
+                      // todo: count taking pawns...
+      
+                      return finishMove(color, move)
+                  }
+                  if (!lastMove.isDouble) return false
+                  if ((lastMove.y1 + lastMove.y2) / 2 != move.y2 ||
+                      lastMove.x2 != move.x2) return false
+      
+                  // It's an "en passant" taking !!
+                  field[lastMove.y2][lastMove.x2] = ' '  // Erasing the opposite pawn
+                  // todo: count taking pawns...
+      
+                  return finishMove(color, move)
+              }
+      
+              // Check if the coordinates difference is valid
+              if (m.y1 == 1) {
+                  if (m.y2 - m.y1 !in 1..2) return false
+              } else {
+                  if (m.y2 - m.y1 != 1) return false
+              }
+      
+              // Check if the coordinates are empty on the pawn's way
+              val f = fieldByColor[color]!!
+              for (y in m.y1 + 1..m.y2) {
+                  if (f[y][m.x1] != ' ') return false
+              }
+      
+              return finishMove(color, move)
+          }
+      
+          private fun finishMove(color: ChessColor, move: Move): Boolean {
+              field[move.y1][move.x1] = ' '
+              field[move.y2][move.x2] = color.sym
+              lastMove = move
+              return true
+          }
+      }
+    learner_created: true
+  - name: src/chess/ChessColor.kt
+    visible: true
+    text: |-
+      package chess
+      
+      enum class ChessColor(val sym: Char, val oppSym: Char, val value: String) {
+          Black('B', 'W', "black"),
+          White('W', 'B', "white");
+      
+          fun oppColor() = if (this == White) Black else White
+      }
+    learner_created: true
+  - name: src/chess/Game.kt
+    visible: true
+    text: |-
+      package chess
+      
+      private val askNamesMap = mapOf(
+          "First" to ChessColor.White,
+          "Second" to ChessColor.Black
+      )
+      private val MOVE_REGEX = Regex("([a-h][1-8]){2}")
+      
+      class Game {
+          private lateinit var pMap: Map<ChessColor, Player>
+          private val board = Board()
+      
+          fun run() {
+              pMap = askNamesMap.map { (num, color) ->
+                  println("$num Player's name:")
+                  Pair(color, Player(readln(), color))
+              }.toMap()
+              var color = ChessColor.Black
+              var sMove = ""
+              while (sMove != "exit") {
+                  println(board)
+      
+                  color = if (color == ChessColor.Black) ChessColor.White else ChessColor.Black
+                  val p = pMap[color]!!
+                  val movePrompt = "${p.name}'s turn:"
+                  while (true) {
+                      println(movePrompt)
+                      sMove = readln()
+                      if (sMove == "exit") break
+                      if (!isMoveFormatValid(sMove)) {
+                          println("Invalid Input")
+                          continue
+                      }
+                      val move = Move(sMove)
+                      if (!board.isPawnOfColorAt(color, move)) {
+                          println("No ${color.value} pawn at ${sMove.substring(0, 2)}")
+                          continue
+                      }
+                      if (!board.makeMove(color, move)) {
+                          println("Invalid Input")
+                          continue
+                      }
+                      break
+                  }
+              }
+              println("Bye!")
+          }
+      
+          private fun isMoveFormatValid(move: String) = MOVE_REGEX.matches(move)
+      
+      }
+    learner_created: true
+  - name: src/chess/Player.kt
+    visible: true
+    text: |-
+      package chess
+      
+      class Player(val name: String, val color: ChessColor)
+    learner_created: true
+  - name: src/chess/Move.kt
+    visible: true
+    text: |-
+      package chess
+      
+      import kotlin.math.abs
+      
+      private const val LETTERS = "abcdefgh"
+      class Move(val x1: Int, val y1: Int, val x2: Int, val y2: Int) {
+      
+          constructor(rawMove: String) : this(
+              LETTERS.indexOf(rawMove[0]),
+              rawMove[1].digitToInt() - 1,
+              LETTERS.indexOf(rawMove[2]),
+              rawMove[3].digitToInt() - 1
+          )
+      
+          val isDouble get() = abs(y2 - y1) == 2
+      
+          fun flip() = Move(x1, 7 - y1, x2, 7 - y2)
+      }
+    learner_created: true
 feedback_link: https://hyperskill.org/learn/step/13178#comment
 status: Unchecked
 record: -1

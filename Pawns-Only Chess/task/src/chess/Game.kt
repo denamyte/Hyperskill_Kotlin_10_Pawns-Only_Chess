@@ -36,13 +36,10 @@ class Game {
                     println("No ${color.value} pawn at ${sMove.substring(0, 2)}")
                     continue
                 }
-                if (!board.isMoveValid(color, move)) {
+                if (!board.makeMove(color, move)) {
                     println("Invalid Input")
                     continue
                 }
-
-                // Everything is valid, make the move
-                board.makeMove(color, move)
                 break
             }
         }

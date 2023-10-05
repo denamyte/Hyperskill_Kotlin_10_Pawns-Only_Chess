@@ -1,5 +1,7 @@
 package chess
 
+import kotlin.math.abs
+
 private const val LETTERS = "abcdefgh"
 class Move(val x1: Int, val y1: Int, val x2: Int, val y2: Int) {
 
@@ -9,6 +11,8 @@ class Move(val x1: Int, val y1: Int, val x2: Int, val y2: Int) {
         LETTERS.indexOf(rawMove[2]),
         rawMove[3].digitToInt() - 1
     )
+
+    val isDouble get() = abs(y2 - y1) == 2
 
     fun flip() = Move(x1, 7 - y1, x2, 7 - y2)
 }

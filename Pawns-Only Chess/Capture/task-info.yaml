@@ -1092,6 +1092,168 @@ files:
     
     
     learner_created: false
+  - name: src/chess/Board.kt
+    visible: true
+    text: |-
+      package chess
+      
+      private const val SIZE = 8
+      private const val SEP_LINE = "  +---+---+---+---+---+---+---+---+\n"
+      private const val LETTER_LINE = "    a   b   c   d   e   f   g   h\n"
+      private val DATA_LINE = "%s | ".repeat(9).trim() + "\n"
+      private val rankRange = 8 downTo 1
+      
+      private fun createRank(c: Char) = MutableList(SIZE) { c }
+      
+      class Board {
+          private val field: MutableList<MutableList<Char>> = MutableList(SIZE) { createRank(' ') }
+          private val fieldByColor = mapOf(
+              ChessColor.White to field,
+              ChessColor.Black to field.reversed()
+          )
+      
+          init {
+              field[1] = createRank('W')
+              field[6] = createRank('B')
+          }
+      
+          override fun toString() = buildString {
+              append(SEP_LINE)
+              append(
+                  rankRange.joinToString(SEP_LINE) {
+                      DATA_LINE.format(it, *field[it - 1].toTypedArray())
+                  }
+              )
+              append(SEP_LINE)
+              append(LETTER_LINE)
+          }
+      
+          fun isMoveValid(color: ChessColor, move: Move): Boolean {
+              val m = if (color == ChessColor.White) move else move.flip()
+      
+              // Check if both coordinates are on the same vertical line
+              if (m.x1 != m.x2) return false
+      
+              // Check if the coordinates difference is valid
+              if (m.y1 == 1) {
+                  if (m.y2 - m.y1 !in 1..2) return false
+              } else {
+                  if (m.y2 - m.y1 != 1) return false
+              }
+      
+              // Check if the coordinates are empty on the pawn's way
+              val f = fieldByColor[color]!!
+              for (y in m.y1 + 1..m.y2) {
+                  if (f[y][m.x1] != ' ') return false
+              }
+      
+              return true
+          }
+      
+          fun isPawnOfColorAt(color: ChessColor, move: Move) = field[move.y1][move.x1] == color.sym
+      
+          fun makeMove(color: ChessColor, move: Move) {
+              field[move.y1][move.x1] = ' '
+              field[move.y2][move.x2] = color.sym
+          }
+      }
+    learner_created: true
+  - name: src/chess/ChessColor.kt
+    visible: true
+    text: |-
+      package chess
+      
+      enum class ChessColor(val sym: Char, val value: String) {
+          Black('B', "black"),
+          White('W', "white"),
+      }
+    learner_created: true
+  - name: src/chess/Game.kt
+    visible: true
+    text: |-
+      package chess
+      
+      private val askNamesMap = mapOf(
+          "First" to ChessColor.White,
+          "Second" to ChessColor.Black
+      )
+      private val MOVE_REGEX = Regex("([a-h][1-8]){2}")
+      
+      class Game {
+          private lateinit var pMap: Map<ChessColor, Player>
+          private val board = Board()
+      
+          fun run() {
+              pMap = askNamesMap.map { (num, color) ->
+                  println("$num Player's name:")
+                  Pair(color, Player(readln(), color))
+              }.toMap()
+              var color = ChessColor.Black
+              var sMove = ""
+              while (sMove != "exit") {
+                  println(board)
+      
+                  color = if (color == ChessColor.Black) ChessColor.White else ChessColor.Black
+                  val p = pMap[color]!!
+                  val movePrompt = "${p.name}'s turn:"
+                  while (true) {
+                      println(movePrompt)
+                      sMove = readln()
+                      if (sMove == "exit") break
+                      if (!isMoveFormatValid(sMove)) {
+                          println("Invalid Input")
+                          continue
+                      }
+                      val move = Move(sMove)
+                      if (!board.isPawnOfColorAt(color, move)) {
+                          println("No ${color.value} pawn at ${sMove.substring(0, 2)}")
+                          continue
+                      }
+                      if (!board.isMoveValid(color, move)) {
+                          println("Invalid Input")
+                          continue
+                      }
+      
+                      // Everything is valid, make the move
+                      board.makeMove(color, move)
+                      break
+                  }
+              }
+              println("Bye!")
+          }
+      
+          private fun isMoveFormatValid(move: String) = MOVE_REGEX.matches(move)
+      
+      }
+    learner_created: true
+  - name: src/chess/Player.kt
+    visible: true
+    text: |-
+      package chess
+      
+      class Player(val name: String, val color: ChessColor)
+    learner_created: true
+  - name: src/chess/Move.kt
+    visible: true
+    text: |-
+      package chess
+      
+      private const val LETTERS = "abcdefgh"
+      class Move(val x1: Int, val y1: Int, val x2: Int, val y2: Int) {
+      
+          constructor(rawMove: String) : this(
+              LETTERS.indexOf(rawMove[0]),
+              rawMove[1].digitToInt() - 1,
+              LETTERS.indexOf(rawMove[2]),
+              rawMove[3].digitToInt() - 1
+          )
+      
+          fun flip() = Move(x1, 7 - y1, x2, 7 - y2)
+      }
+    learner_created: true
 feedback_link: https://hyperskill.org/learn/step/13177#comment
-status: Unchecked
-record: -1
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Thu, 05 Oct 2023 18:40:23 UTC"
+record: 4
