@@ -1,8 +1,9 @@
 package chess
 
-enum class ChessColor(val sym: Char, val oppSym: Char, val value: String) {
-    Black('B', 'W', "black"),
-    White('W', 'B', "white");
+enum class ChessColor(val sym: Char, val value: String) {
+    Black('B', "black"),
+    White('W', "white");
 
-    fun oppColor() = if (this == White) Black else White
+    /** The opposite color */
+    val opp get() = if (this == White) Black else White
 }

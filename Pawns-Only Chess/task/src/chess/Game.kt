@@ -17,7 +17,7 @@ class Game {
         }.toMap()
         var color = ChessColor.Black
         var sMove = ""
-        while (sMove != "exit") {
+        main@while (sMove != "exit") {
             println(board)
 
             color = if (color == ChessColor.Black) ChessColor.White else ChessColor.Black
@@ -36,11 +36,21 @@ class Game {
                     println("No ${color.value} pawn at ${sMove.substring(0, 2)}")
                     continue
                 }
-                if (!board.makeMove(color, move)) {
-                    println("Invalid Input")
-                    continue
+
+                when (board.makeMove(color, move)) {
+                    GameState.NORMAL -> break
+                    GameState.ERROR -> println("Invalid Input")
+                    GameState.STALEMATE -> {
+                        println(board)
+                        println("Stalemate!")
+                        break@main
+                    }
+                    GameState.WIN -> {
+                        println(board)
+                        println("${color.value.replaceFirstChar { it.uppercase() }} Wins!")
+                        break@main
+                    }
                 }
-                break
             }
         }
         println("Bye!")
