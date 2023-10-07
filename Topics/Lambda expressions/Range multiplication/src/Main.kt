@@ -1,0 +1,1 @@
+val lambda: (Long, Long) -> Long = { from, to -> (from..to).reduce { a, b -> a * b } }
